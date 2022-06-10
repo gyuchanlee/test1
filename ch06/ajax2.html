@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajax2</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    let url = 'https://jsonplaceholder.typicode.com/photos';
+    let xhtp = new XMLHttpRequest();
+    xhtp.open('GET',url);
+    xhtp.send();
+    xhtp.onload= function(){
+      console.log(JSON.parse(xhtp.responseText));
+      let result = JSON.parse(xhtp.responseText); // 배열
+      
+      let filterArr = result.filter(e=> e.albumId == 1 && e.id <= 10);
+      let ul = document.createElement('ul');
+      filterArr.forEach(e=>{
+        let li = document.createElement('li');
+        li.innerHTML = e.id+' , '+e.title+' , '+'<span><img width=40px src="'+e.thumbnailUrl+'"</span>';
+        ul.append(li);
+      });
+      document.getElementById('show').append(ul);
+    };
+  });
+</script>
+<body>
+  <div id="show">
+    
+  </div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajax3</title>
+</head>
+<style>
+  #pagess{
+    display: inline-block;
+    width: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+</style>
+<body>
+  <input type="text" name="" id="searchCenter" value="서울특별시">
+  <button type="submit" id="searchButton">센터찾기</button>
+  <div id="show"></div>
+  <script>
+    let url ='https://api.odcloud.kr/api/15077586/v1/centers?page=1&perPage=284&returnType=JSON&serviceKey=vx3y3z%2Fnkp0rJmOdO71IYpC3Ux0awJZAFzUeczWDQv3aoxNqZGXQU8nSoUxE2cXRGL5o7QT0ebLZRVgx8bSucw%3D%3D';
+    let xhtp = new XMLHttpRequest();
+    let dataArr= '';
+    xhtp.open('GET',url);
+    xhtp.send();
+    xhtp.onreadystatechange = function() {
+      console.log('요청상태: '+xhtp.readyState+' 서버상태: '+ xhtp.status);
+      if(xhtp.readyState==4 && xhtp.status==200){
+        let result = JSON.parse(xhtp.responseText);
+        console.log(result);
+        dataArr = result.data; // 원본 데이터
+        let fArr = dataArr.filter(center=>{
+          let searchCenter = document.getElementById('searchCenter').value;
+          return center.sido == searchCenter;
+        });
+        
+        let table = document.createElement('table'); // 테이블 생성
+        table.setAttribute('border',1); // 보더 속성 1.
+        table.setAttribute('id','tbl');
+        table.append(makeHeader());
+        table.append(makeBody(fArr, 1));
+        makePage(fArr);
+
+        document.getElementById('show').append(table);
+      }
+    }; // client <-> server.
+
+    document.getElementById('searchButton').addEventListener('click',function(){
+      // 버튼 클릭시 실행.
+        let fArr = dataArr.filter(center=>{
+            let searchCenter = document.getElementById('searchCenter').value;
+            return center.sido == searchCenter;
+        });
+
+        
+        if(document.querySelector('#show>#pagess')!=null){
+          // document.getElementById("pagess").remove();
+          let x = document.querySelectorAll("#pagess");
+          for(let i=0; i<x.length; i++){
+            x[i].remove();
+          }  
+        };
+
+        document.getElementById('tbl').append(makeBody(fArr,1));
+        makePage(fArr);
+    });
+
+    let fields = ['id', 'centerName','sido', 'address', 'phoneNumber'];
+    // header
+    function makeHeader(){
+      let thead = document.createElement('thead');
+      let tr = document.createElement('tr');
+      thead.append(tr);
+      fields.forEach(field => {
+        let th = document.createElement('th');
+        th.innerText = field.toUpperCase();
+        tr.append(th);
+      });
+      return thead;
+    }
+    // body.
+    function makeBody(arr, page){
+      // page 1 > 10개씩.
+      // idx > 0-9 / 10-19 / 20-29
+      // startCnt, endCnt; 1:(page-1)*10, (page)*10-1
+      let startCnt = (page-1)*10;
+      let endCnt = (page*10)-1;
+      
+      if(document.querySelector('#tbl>tbody')!=null){
+        document.querySelector('#tbl>tbody').remove();
+      };
+      let tbody = document.createElement('tbody');
+      arr.forEach((e,idx)=> {
+        if(idx >= startCnt && idx <= endCnt){
+          tbody.append(makeTr(e))
+        }
+      });
+      return tbody;
+    };
+    // tr.
+    function makeTr(obj){
+      let tr = document.createElement('tr');
+      fields.forEach(field => {
+        let td = document.createElement('td');
+        if(field != 'address'){
+          td.innerText = obj[field];
+        } else {
+          let a = document.createElement('a');
+          a.setAttribute('href',`mapApi.html?centerName=${obj.centerName}&xpos=${obj.lat}&ypos=${obj.lng}`);
+          a.setAttribute('target','_blank');
+          a.innerText = obj[field];
+          td.append(a);
+        }
+        tr.append(td);
+      });
+      return tr; 
+    }
+
+    function makePage(arr) {
+      let show = document.getElementById('show');
+      // arr : 1~20, 1~2page.
+      let totalPage = Math.ceil(arr.length/ 10);
+      
+      for(let i=1; i<=totalPage; i++){
+        let a = document.createElement('a');
+        a.setAttribute('id','pagess')
+        a.addEventListener('click',function(e){
+          e.preventDefault(); // 기본기능 차단.
+          let page = e.target.innerText;
+          document.getElementById('tbl').append(makeBody(arr,page));
+        })
+        a.innerText = i;
+        a.setAttribute('href','#');
+        show.append(a);
+      }
+    }
+  </script>
+</body>
+</html>

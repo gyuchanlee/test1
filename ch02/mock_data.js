@@ -1,0 +1,26 @@
+// mock_data 활용
+
+let data = `[{"id":"Hatity","first_name":"Lenette","last_name":"Disley","email":"ldisley0@360.cn","gender":"Female","ip_address":"171.142.8.132","salary":65},
+{"id":"Rank","first_name":"Cly","last_name":"Comford","email":"ccomford1@tripod.com","gender":"Male","ip_address":"3.149.98.235","salary":7},
+{"id":"Voltsillam","first_name":"Tudor","last_name":"Kiddie","email":"tkiddie2@blogs.com","gender":"Male","ip_address":"194.68.207.2","salary":20},
+{"id":"Viva","first_name":"Ann-marie","last_name":"Halloran","email":"ahalloran3@yellowpages.com","gender":"Female","ip_address":"88.194.49.184","salary":22},
+{"id":"Keylex","first_name":"Valentine","last_name":"Manilow","email":"vmanilow4@wordpress.com","gender":"Male","ip_address":"218.193.159.170","salary":43},
+{"id":"Stringtough","first_name":"Mikol","last_name":"Curwood","email":"mcurwood5@reference.com","gender":"Male","ip_address":"57.117.116.182","salary":37},
+{"id":"Zaam-Dox","first_name":"Dalis","last_name":"Trembath","email":"dtrembath6@addthis.com","gender":"Male","ip_address":"192.191.109.103","salary":67},
+{"id":"Fixflex","first_name":"Moria","last_name":"Towriss","email":"mtowriss7@cornell.edu","gender":"Female","ip_address":"76.59.34.229","salary":98},
+{"id":"Keylex","first_name":"Brice","last_name":"Stirton","email":"bstirton8@wordpress.com","gender":"Male","ip_address":"27.77.211.199","salary":46},
+{"id":"Flowdesk","first_name":"Marsh","last_name":"Rabidge","email":"mrabidge9@sakura.ne.jp","gender":"Genderfluid","ip_address":"92.36.40.131","salary":22}]`;
+
+data = JSON.parse(data); // JSON > 자바스크립트의 Object 변형
+console.log(data);
+
+let over50 = data.filter((val,idx) => {return val.salary >= 50});
+console.log(over50);
+
+let females = data.filter((obj)=>{return obj.gender=="Female"})
+console.log(females);
+
+console.clear();
+
+let str = createTable(females); // function1.js 스크립트 먼저 불러오기
+document.write(str);

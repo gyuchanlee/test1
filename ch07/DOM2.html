@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM2</title>
+  </head>
+  <body>
+    <form name="frm" id="form" action="DOM1.html">
+      <!-- member_id : <input type="number" name="member_id" value="4" /><br /> -->
+      first_name : <input type="text" name="fname" value="흥민" /><br />
+      last_name : <input type="text" name="lname" value="손" /><br />
+      phone : <input type="tel" name="phone" value="010-1557-1557" /><br />
+      age : <input type="number" name="age" value="29" /><br />
+      <input type="hidden" name="member_id" value="">
+      <input type="submit" value="저장" />
+      <input type="button" value="선택 삭제" />
+      <input type="button" value="변경" id="changeBtn" />
+    </form>
+    <hr />
+    <table border="1">
+      <thead>
+        <tr>
+          <!-- checkbox -->
+          <th>선 택</th>
+          <th>Member Id</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Phone</th>
+          <th>Age</th>
+          <th>삭제</th>
+        </tr>
+      </thead>
+      <tbody id="list">
+        <!-- <tr>
+        <td><input type="checkbox" name=""></td>
+        <td>연습용</td>
+        <td>기본</td>
+        <td>017-4000-2000</td>
+        <td>22</td>
+        <td><button>삭제</button></td>
+      </tr> -->
+      </tbody>
+    </table>
+    <script>
+      // 페이지가 로딩될 때 리스트 가져오기.
+
+      // 리스트 출력.
+      let memberList = [
+        {
+          member_id : 1,
+          first_name: "임경",
+          last_name: "정",
+          phone: "010-4444-4444",
+          age: 20
+        },
+        {
+          member_id : 2,
+          first_name: "근형",
+          last_name: "박",
+          phone: "010-5555-5555",
+          age: 27
+        },
+        {
+          member_id : 3,
+          first_name: "명박",
+          last_name: "이",
+          phone: "010-6666-6666",
+          age: 25
+        },
+      ];
+
+      memberList.forEach(function (val) {
+        let id =val.member_id;
+        let fn = val.first_name;
+        let ln = val.last_name;
+        let ph = val.phone;
+        let age = val.age;
+        let values = [id, fn, ln, ph, age];
+
+        let tr, td, checkbox, btn;
+        tr = document.createElement("tr");
+
+        tr.setAttribute('id','member_'+values[0]);
+
+        tr.addEventListener("click", function () {
+        // console.log(tr.children[2].innerText);
+        document.forms.frm.member_id.value = tr.children[1].innerText;
+        document.forms.frm.fname.value = tr.children[2].innerText;
+        document.forms.frm.lname.value = tr.children[3].innerHTML;
+        document.forms.frm.phone.value = tr.children[4].innerHTML;
+        document.forms.frm.age.value = tr.children[5].innerHTML;
+        });
+
+        values.forEach((val, idx) => {
+          if (idx == 0) {
+            // 체크박스 생성
+            td = document.createElement("td");
+            checkbox = document.createElement("input");
+            checkbox.setAttribute("type", "checkbox"); // 매개값 : 속성, 속성값
+            td.append(checkbox);
+            tr.append(td);
+          }
+          // td 회원정보 기입
+          td = document.createElement("td");
+          td.innerHTML = val;
+          tr.append(td);
+
+          if (idx == values.length - 1) {
+            // 삭제버튼 생성
+            td = document.createElement("td");
+            btn = document.createElement("button");
+            btn.addEventListener("click", (e) =>
+              e.target.parentElement.parentElement.remove()
+            );
+            btn.innerText = "삭제";
+            td.append(btn);
+            tr.append(td);
+          }
+        });
+        document.getElementById("list").append(tr);
+      });
+
+      // 선택 삭제.
+      document
+        .querySelector('form > input[type="button"]')
+        .addEventListener("click", delCheck);
+
+      function delCheck() {
+        let checkList = document.querySelectorAll(
+          '#list input[type="checkbox"]'
+        );
+        checkList.forEach((e) => {
+          if (e.checked) {
+            e.parentElement.parentElement.remove();
+          }
+        });
+      }
+
+      // 변경버튼 클릭.
+      document.querySelector('#changeBtn').addEventListener('click', function(){
+        // 폼의 값으로 table-tbody 요소를 찾아서 변경.
+        let key = document.forms.frm.member_id.value;
+        let tr = document.getElementsById('member_'+key);
+        console.log(tr);
+        // document.forms
+        tr.children[5].innerText = document.forms.frm.age.value;
+      });
+
+      document.forms.frm.onsubmit = function (ev) {
+        ev.preventDefault(); // 이벤트 기능 막기. onsubmit
+        // 사용자 입력값.
+        console.log(this);
+        let id = this.member_id.value;
+        let fn = this.fname.value;
+        let ln = this.lname.value;
+        let ph = this.phone.value;
+        let age = this.age.value;
+        let values = [id, fn, ln, ph, age];
+
+        let tr, td, checkbox, btn;
+        tr = document.createElement("tr");
+
+        tr.addEventListener("click", function () {
+        console.log(tr.children[2].innerHTML);
+        });
+
+        values.forEach((val, idx) => {
+          if (idx == 0) {
+            // 체크박스 생성
+            td = document.createElement("td");
+            checkbox = document.createElement("input");
+            checkbox.setAttribute("type", "checkbox"); // 매개값 : 속성, 속성값
+            td.append(checkbox);
+            tr.append(td);
+          }
+          // td 회원정보 기입
+          td = document.createElement("td");
+          td.innerHTML = val;
+          tr.append(td);
+
+          if (idx == values.length - 1) {
+            // 삭제버튼 생성
+            td = document.createElement("td");
+            btn = document.createElement("button");
+            btn.addEventListener("click", (e) =>
+              e.target.parentElement.parentElement.remove()
+            );
+            btn.innerText = "삭제";
+            td.append(btn);
+            tr.append(td);
+          }
+        });
+        document.getElementById("list").append(tr);
+      };
+    </script>
+  </body>
+</html>

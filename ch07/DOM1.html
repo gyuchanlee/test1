@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM1</title>
+</head>
+<body>
+  이름 : <input type="text" name="" id="name" value="선우용녀"><br>
+  나이 : <input type="number" name="" id="age" value="88"><br>
+  <button>입력</button>
+  <hr>
+  <!-- <ul id="list"></ul> -->
+  <table border="1">
+    <thead>
+      <th>이름</th>
+      <th>나이</th>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+    <script>
+      let btn = document.querySelector('button');
+      btn.addEventListener('click',function() {
+        console.log(this);
+        let vname = document.getElementById('name').value;
+        let vage = document.getElementById('age').value;
+        let li = document.createElement('tr');
+        li.innerHTML = `<td>${vname}</td><td>${vage}</td>`;
+        if(!vname || !vage){
+          alert('값을 입력하세요');
+          return;
+        }
+        document.getElementById('list').append(li);
+        document.getElementById('name').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('name').focus();
+      });
+    </script>
+</body>
+</html>

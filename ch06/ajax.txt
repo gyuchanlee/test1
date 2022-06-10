@@ -1,0 +1,3 @@
+ajax.txt
+hellom world
+헬로우
